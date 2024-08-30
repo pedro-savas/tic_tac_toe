@@ -3,19 +3,25 @@ import random
 
 class Board:
     def __init__(self):
-        self.board = [[str(3 * i + j + 1) for j in range(3)] for i in range(3)]
+        self.board = [
+            [
+                str(3 * row + column + 1)  # Calculate the position number
+                for column in range(3)      # Iterate over columns
+            ]
+            for row in range(3)             # Iterate over rows
+        ]
 
     def print_board(self):
-        os.system('cls' if os.name == 'nt' else 'clear')
+        os.system('cls' if os.name == 'nt' else 'clear') # Clears the screen in every print
 
         for row in self.board:
             print(" | ".join(row))
             print("-" * 9)
 
     def update_board(self, position, player):
-        row, col = divmod(position - 1, 3)
-        if self.board[row][col] not in ["X", "O"]:
-            self.board[row][col] = player.symbol
+        row, column = divmod(position - 1, 3)
+        if self.board[row][column] not in ["X", "O"]:
+            self.board[row][column] = player.symbol
             return True
         else:
             print("This position is already occupied. Choose another one.")
@@ -24,14 +30,17 @@ class Board:
     def check_winner(self, player):
         symbol = player.symbol
 
+        # Check rows
         for row in self.board:
-            if all([cell == symbol for cell in row]):
+            if all([cell == symbol for cell in row]): # Checks each cell in row
                 return True
 
+        # Check columns
         for col in range(3):
-            if all([self.board[row][col] == symbol for row in range(3)]):
+            if all([self.board[row][col] == symbol for row in range(3)]): # Checks each row in column
                 return True
 
+        # Check diagonals
         if all([self.board[i][i] == symbol for i in range(3)]) or all([self.board[i][2 - i] == symbol for i in range(3)]):
             return True
 
